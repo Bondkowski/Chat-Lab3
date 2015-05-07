@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class ChatServer {
-    //Thread pool uop to ten working threads in one moment
+    //Thread pool up to ten working threads in one moment
     private static ThreadPoolExecutor executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
     private static ServerSocket mainSocket;
     private static HashMap<Integer,ChatRoom> allChatRooms = new HashMap<Integer, ChatRoom>();
@@ -29,6 +29,8 @@ public class ChatServer {
 
     public void sendMessage(ArrayList<String> strings){
         Integer room_ref = Integer.parseInt(strings.get(0).substring(6));
+        System.out.println(room_ref);
+        strings.remove(1);
         for(Map.Entry<Integer, ChatClient> entry : allChatRooms.get(room_ref).getRoomClients().entrySet()){
             entry.getValue().setMessage(strings);
         }

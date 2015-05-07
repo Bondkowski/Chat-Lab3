@@ -47,9 +47,9 @@ public class ChatClient implements Runnable {
         String message = "Something was wrong...";
         String identity = messageInArray.get(0);
         if(identity.startsWith("CHAT:")){
-           message = (messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n");
-        } else if(identity.startsWith("JOIN_CHATROOM:")){
-            message = (messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n+"+messageInArray.remove(0)+"\n");
+           message = (messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n\n");
+        } else if(identity.startsWith("JOINED_CHATROOM:")){
+            message = (messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n");
         } else if (identity.startsWith("LEAVE_CHATROOM:")){
             message = (messageInArray.remove(0)+"\n"+messageInArray.remove(0)+"\n");
 
@@ -115,6 +115,7 @@ public class ChatClient implements Runnable {
                 }
                 if (sentence.startsWith("CHAT")) {
                     try {
+                    	System.out.println("CHAT message received");
                         server.sendMessage(getArrayFromClient(sentence, messageFromClient));
                     } catch (Exception e) {
                         responseToClient.println("ERROR_CODE:" + 1 + "\n" + "ERROR_DESCRIPTION:" + e.getMessage());
@@ -125,7 +126,7 @@ public class ChatClient implements Runnable {
                             name = getArrayFromClient(sentence, messageFromClient).get(3).substring(13);
                         }
                         server.joinChatRoom(getArrayFromClient(sentence, messageFromClient), this);
-                        responseToClient.println();
+                        //responseToClient.println();
                     } catch (Exception e) {
                         responseToClient.println("ERROR_CODE:" + 2 + "\n" + "ERROR_DESCRIPTION:" + e.getMessage());
                     }
@@ -156,10 +157,13 @@ public class ChatClient implements Runnable {
 
                 //Sending a message to the client
 
-                if (!messageInArray.isEmpty()) {
+                if (!messageInArray.isEmpty())
                     responseToClient.println(getMessage());
+                    System.out.println("Another message sent");
                 }
-            }
+                System.out.println("idle");
+        
+        
         } catch (IOException e) {
             System.err.println("Can not listen to the socket:  " + connectionSocket.getLocalPort());
             e.getMessage();
